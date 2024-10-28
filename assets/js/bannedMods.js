@@ -16,39 +16,44 @@
         parseCSV(text);
     }
 
-    // Function to parse CSV data
-    function parseCSV(data) {
-        const rows = data.split('\n').slice(1); // Skip header row
-        rows.forEach(row => {
-            const columns = row.split(',');
-            if (columns.length > 0) {
-                const takenDownFrom = columns[4].split(';').map((name, index) => ({
-                    name: name.trim(),
-                    link: columns[5].split(';')[index].trim()
-                }));
-                const republishedOn = {
-                    name: columns[6].trim(),
-                    link: columns[7].trim()
-                };
+// Function to parse CSV data
+function parseCSV(data) {
+    const rows = data.split('\n').slice(1); // Skip header row
+    rows.forEach(row => {
+        // Trim the row to avoid empty rows
+        const trimmedRow = row.trim();
+        if (trimmedRow.length === 0) return; // Skip empty rows
 
-                items.push({
-                    featuredImg: columns[0].trim(),
-                    modTitle: columns[1].trim(),
-                    modDesc: columns[2].trim(),
-                    takeDownDate: columns[3].trim(),
-                    takenDownFrom: takenDownFrom,
-                    republishedOn: republishedOn,
-                    isCreatorBanned: columns[8].trim(),
-                    creatorName: columns[9].trim(),
-                    creatorLink: columns[10].trim(),
-                    isNSFW: columns[11].trim(),
-                    gameName: columns[12].trim(),
-                    gameLink: columns[13].trim()
-                });
-            }
-        });
-        renderItems(currentPage);
-    }
+        const columns = trimmedRow.split(',');
+        if (columns.length > 0) {
+            const takenDownFrom = columns[4].split(';').map((name, index) => ({
+                name: name.trim(),
+                link: columns[5].split(';')[index]?.trim() || '' // Use optional chaining to avoid undefined
+            }));
+            const republishedOn = {
+                name: columns[6].trim(),
+                link: columns[7].trim()
+            };
+
+            items.push({
+                featuredImg: columns[0].trim(),
+                modTitle: columns[1].trim(),
+                modDesc: columns[2].trim(),
+                takeDownDate: columns[3].trim(),
+                takenDownFrom: takenDownFrom,
+                republishedOn: republishedOn,
+                isCreatorBanned: columns[8].trim(),
+                creatorName: columns[9].trim(),
+                creatorLink: columns[10].trim(),
+                isNSFW: columns[11].trim(),
+                gameName: columns[12].trim(),
+                gameLink: columns[13].trim()
+            });
+        }
+    });
+    renderItems(currentPage);
+}
+
 
     function renderItems(page) {
         secMainInside2GridBoxInsideAlt.innerHTML = '';
