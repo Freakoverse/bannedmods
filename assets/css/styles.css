@@ -374,6 +374,7 @@ p, h1, h2, h3, h4, h5, h6 {
   right: 0;
   left: 0;
   object-fit: cover;
+  background: rgba(0,0,0,0.1);
 }
 
 .sMI2GBIBFeaturedTop {
@@ -519,6 +520,7 @@ p, h1, h2, h3, h4, h5, h6 {
   width: 100%;
   border: solid 1px rgba(255,255,255,0.05);
   box-shadow: 0 0 8px 0 rgba(0,0,0,0);
+  padding: 5px;
 }
 
 .btnMain.sMI2GBIBActionsButton:hover {
