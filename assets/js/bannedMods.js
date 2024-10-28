@@ -123,22 +123,29 @@
         renderPagination();
     }
 
-    function renderPagination() {
-        const totalPages = Math.ceil(items.length / itemsPerPage);
-        paginationNumbers.innerHTML = '';
+function renderPagination() {
+    const totalPages = Math.ceil(items.length / itemsPerPage); // Declare totalPages once
+    paginationNumbers.innerHTML = '';
 
-        for (let i = 1; i <= totalPages; i++) {
-            const button = document.createElement('button');
-            button.className = `btnMain paginationMainInsideBtn ${i === currentPage ? 'paginationMainInsideBtnActive' : ''}`;
-            button.type = 'button';
-            button.type = 'button';
-            button.innerHTML = `<span>${i}</span>`;
-            button.addEventListener('click', () => {
-                currentPage = i;
-                renderItems(currentPage);
-            });
-            paginationNumbers.appendChild(button);
-        }
+    for (let i = 1; i <= totalPages; i++) {
+        const button = document.createElement('button');
+        button.className = `btnMain paginationMainInsideBtn ${i === currentPage ? 'paginationMainInsideBtnActive' : ''}`;
+        button.type = 'button';
+        button.innerHTML = `<span>${i}</span>`;
+        button.addEventListener('click', () => {
+            currentPage = i;
+            renderItems(currentPage);
+        });
+        paginationNumbers.appendChild(button);
+    }
+
+    // Enable/disable Previous button
+    prevButton.disabled = currentPage === 1;
+
+    // Enable/disable Next button
+    nextButton.disabled = currentPage === totalPages; // Use totalPages without redeclaring
+}
+
 
         // Enable/disable Previous button
         prevButton.disabled = currentPage === 1;
