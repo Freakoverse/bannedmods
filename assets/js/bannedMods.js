@@ -125,9 +125,11 @@ function parseCSV(data) {
                         </div>
                         <div class="sMI2GBIBRepubMidDivider"></div>
                         <div class="sMI2GBIBRepubMid">
-                            <a class="btnMain sMI2GBIBRepubMidBtn" role="button" href="${item.republishedOn.link}" target="_blank">
-                                <span class="sMI2GBIBRepubMidBtnSpan">${item.republishedOn.name}</span>
-                            </a>
+                            ${item.republishedOn.map(repub => `
+                                <a class="btnMain sMI2GBIBRepubMidBtn" role="button" href="${repub.link}" target="_blank">
+                                    <span class="sMI2GBIBRepubMidBtnSpan">${repub.name}</span>
+                                </a>
+                            `).join('')}
                         </div>
                     </div>
                 </div>
