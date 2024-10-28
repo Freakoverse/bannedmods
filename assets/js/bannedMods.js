@@ -5,44 +5,49 @@
     const prevButton = bannedMods.querySelector('.paginationMainInsideBtnArrowPrev');
     const nextButton = bannedMods.querySelector('.paginationMainInsideBtnArrowNext');
 
-    let items = []; // Initialize items as an empty array
+    let items = [];
     const itemsPerPage = 8;
     let currentPage = 1;
 
     // Function to fetch and parse CSV data
-    async function fetchCSVData() {
-        const response = await fetch('/db/bannedmods.csv'); // Adjust the path as necessary
+    async function fetchCSV() {
+        const response = await fetch('/db/bannedmods.csv');
         const text = await response.text();
         parseCSV(text);
     }
 
-    // Function to parse CSV text into items array
-    function parseCSV(text) {
-        const rows = text.split('\n').slice(1); // Skip header row
-        items = rows.map(row => {
+    // Function to parse CSV data
+    function parseCSV(data) {
+        const rows = data.split('\n').slice(1); // Skip header row
+        rows.forEach(row => {
             const columns = row.split(',');
-            return {
-                featuredImg: columns[0],
-                modTitle: columns[1],
-                modDesc: columns[2],
-                takeDownDate: columns[3],
-                takenDownFrom: columns[4].split(';').map((name, index) => ({
+            if (columns.length > 0) {
+                const takenDownFrom = columns[4].split(';').map((name, index) => ({
                     name: name.trim(),
                     link: columns[5].split(';')[index].trim()
-                })),
-                republishedOn: {
+                }));
+                const republishedOn = {
                     name: columns[6].trim(),
                     link: columns[7].trim()
-                },
-                isCreatorBanned: columns[8].trim(),
-                creatorName: columns[9].trim(),
-                creatorLink: columns[10].trim(),
-                isNSFW: columns[11].trim(),
-                gameName: columns[12].trim(),
-                gameLink: columns[13].trim()
-            };
+                };
+
+                items.push({
+                    featuredImg: columns[0].trim(),
+                    modTitle: columns[1].trim(),
+                    modDesc: columns[2].trim(),
+                    takeDownDate: columns[3].trim(),
+                    takenDownFrom: takenDownFrom,
+                    republishedOn: republishedOn,
+                    isCreatorBanned: columns[8].trim(),
+                    creatorName: columns[9].trim(),
+                    creatorLink: columns[10].trim(),
+                    isNSFW: columns[11].trim(),
+                    gameName: columns[12].trim(),
+                    gameLink: columns[13].trim()
+                });
+            }
         });
-        renderItems(currentPage); // Render items after fetching
+        renderItems(currentPage);
     }
 
     function renderItems(page) {
@@ -67,7 +72,7 @@
                             <span class="sMI2GBIBFeaturedBottomCreatorBanned">${item.isCreatorBanned === "yes" ? 'Banned' : 'Safe'}</span>
                             <div class="sMI2GBIBFeaturedBottomCreatorDivider"></div>
                             <span class="sMI2GBIBFeaturedBottomCreatorName">${item.creatorName}</span>
-                                                    </a>
+                        </a>
                     </div>
                 </div>
                 <div class="sMI2GBIBDetails">
@@ -115,7 +120,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
             `;
             secMainInside2GridBoxInsideAlt.appendChild(itemElement);
         });
@@ -123,35 +127,26 @@
         renderPagination();
     }
 
-function renderPagination() {
-    const totalPages = Math.ceil(items.length / itemsPerPage); // Declare totalPages once
-    paginationNumbers.innerHTML = '';
-
-    for (let i = 1; i <= totalPages; i++) {
-        const button = document.createElement('button');
-        button.className = `btnMain paginationMainInsideBtn ${i === currentPage ? 'paginationMainInsideBtnActive' : ''}`;
-        button.type = 'button';
-        button.innerHTML = `<span>${i}</span>`;
-        button.addEventListener('click', () => {
-            currentPage = i;
-            renderItems(currentPage);
-        });
-        paginationNumbers.appendChild(button);
-    }
-
-    // Enable/disable Previous button
-    prevButton.disabled = currentPage === 1;
-
-    // Enable/disable Next button
-    nextButton.disabled = currentPage === totalPages; // Use totalPages without redeclaring
-}
-
+    function renderPagination() {
+        const totalPages = Math.ceil(items.length / itemsPerPage);
+        paginationNumbers.innerHTML = '';
+        // Create pagination buttons
+        for (let i = 1; i <= totalPages; i++) {
+            const button = document.createElement('button');
+            button.className = `btnMain paginationMainInsideBtn ${i === currentPage ? 'paginationMainInsideBtnActive' : ''}`;
+            button.type = 'button';
+            button.innerHTML = `<span>${i}</span>`;
+            button.addEventListener('click', () => {
+                currentPage = i;
+                renderItems(currentPage);
+            });
+            paginationNumbers.appendChild(button);
+        }
 
         // Enable/disable Previous button
         prevButton.disabled = currentPage === 1;
 
         // Enable/disable Next button
-        const totalPages = Math.ceil(items.length / itemsPerPage);
         nextButton.disabled = currentPage === totalPages;
     }
 
@@ -172,5 +167,7 @@ function renderPagination() {
     });
 
     // Initial fetch and render
-    fetchCSVData();
+    fetchCSV();
 })();
+
+       
