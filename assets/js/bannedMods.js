@@ -33,18 +33,18 @@
                 takeDownDate: columns[3].trim(),
                 takenDownFrom: takenDownFrom.map((name, index) => ({
                     name: name,
-                    link: takenDownFromLink[index] || ''
+                    link: takenDownFromLink[index] ? takenDownFromLink[index].trim() : '' // Ensure link is trimmed
                 })),
                 republishedOn: republishedOnNames.map((name, index) => ({
                     name: name,
-                    link: republishedOnLinks[index] || ''
+                    link: republishedOnLinks[index] ? republishedOnLinks[index].trim() : '' // Ensure link is trimmed
                 })),
                 isCreatorBanned: columns[8].trim(),
                 creatorName: columns[9].trim(),
-                creatorLink: columns[10].trim(),
+                creatorLink: columns[10].trim(), // Ensure this is correctly formatted in the CSV
                 isNSFW: columns[11].trim(),
                 gameName: columns[12].trim(),
-                gameLink: columns[13].trim()
+                gameLink: columns[13].trim() // Ensure this is correctly formatted in the CSV
             };
         });
 
