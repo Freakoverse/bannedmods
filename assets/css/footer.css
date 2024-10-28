@@ -161,3 +161,38 @@
   grid-gap: 25px;
 }
 
+.sMI2GBIBGame {
+  display: flex;
+  flex-direction: column;
+  grid-gap: 5px;
+}
+
+.sMI2GBIBGameText {
+  font-size: 14px;
+  color: rgba(255,255,255,0.25);
+}
+
+.sMI2GBIBGameGame {
+  display: flex;
+  flex-direction: row;
+}
+
+.sMI2GBIBGameGameLink {
+  transition: ease 0.4s;
+  padding: 5px 10px;
+  border-radius: 5px;
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.5);
+  /*border: solid 1px rgba(255,255,255,0.05);*/
+  box-shadow: 0 0 8px 0 rgb(0,0,0,0.0);
+  width: 100%;
+}
+
+.sMI2GBIBGameGameLinkText {
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: 1;
+  text-overflow: ellipsis;
+  font-size: 14px;
+}
+

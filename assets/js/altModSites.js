@@ -2,7 +2,7 @@
 const modSites = [
     {
         name: "DEG Mods",
-        description: "DEG Mods description",
+        description: "The first censorship-resistant and permissionless mod site",
         image: "https://image.nostr.build/d7a8b7ccf2ecd02f0496cf95ff860309c87dcb053c5bc030557b9f47be7c2bd2.png",
         link: "https://degmods.com/"
     },

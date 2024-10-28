@@ -328,7 +328,7 @@ p, h1, h2, h3, h4, h5, h6 {
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
   .secMainInside2GridBoxInside.secMainInside2GridBoxInsideAlt {
     grid-template-columns: 1fr;
   }
