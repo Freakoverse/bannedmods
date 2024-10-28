@@ -11,7 +11,7 @@
 
     // Function to fetch and parse CSV data
     async function fetchCSVData() {
-        const response = await fetch('data.csv'); // Adjust the path as necessary
+        const response = await fetch('/db/bannedmods.csv'); // Adjust the path as necessary
         const text = await response.text();
         parseCSV(text);
     }
