@@ -27,13 +27,17 @@ function parseCSV(data) {
         const columns = trimmedRow.split(',');
         if (columns.length > 0) {
             const takenDownFrom = columns[4].split(';').map((name, index) => ({
-                name: name.replace(/"/g, '').trim(),
-                link: columns[5].split(';')[index]?.replace(/"/g, '').trim() || ''
+                name: name.replace(/"/g, '').trim(), // Remove quotes and trim
+                link: columns[5].split(';')[index]?.replace(/"/g, '').trim() || '' // Remove quotes and trim
             }));
-            const republishedOn = {
-                name: columns[6].replace(/"/g, '').trim(),
-                link: columns[7].replace(/"/g, '').trim()
-            };
+
+            // Handle multiple republishedOn entries
+            const republishedOnNames = columns[6].split(';').map(name => name.replace(/"/g, '').trim());
+            const republishedOnLinks = columns[7].split(';').map(link => link.replace(/"/g, '').trim());
+            const republishedOn = republishedOnNames.map((name, index) => ({
+                name: name,
+                link: republishedOnLinks[index] || '' // Ensure there's a link for each name
+            }));
 
             items.push({
                 featuredImg: columns[0].replace(/"/g, '').trim(),
@@ -53,6 +57,7 @@ function parseCSV(data) {
     });
     renderItems(currentPage);
 }
+
 
 
 
