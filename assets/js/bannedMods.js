@@ -27,32 +27,33 @@ function parseCSV(data) {
         const columns = trimmedRow.split(',');
         if (columns.length > 0) {
             const takenDownFrom = columns[4].split(';').map((name, index) => ({
-                name: name.trim(),
-                link: columns[5].split(';')[index]?.trim() || '' // Use optional chaining to avoid undefined
+                name: name.replace(/"/g, '').trim(),
+                link: columns[5].split(';')[index]?.replace(/"/g, '').trim() || ''
             }));
             const republishedOn = {
-                name: columns[6].trim(),
-                link: columns[7].trim()
+                name: columns[6].replace(/"/g, '').trim(),
+                link: columns[7].replace(/"/g, '').trim()
             };
 
             items.push({
-                featuredImg: columns[0].trim(),
-                modTitle: columns[1].trim(),
-                modDesc: columns[2].trim(),
-                takeDownDate: columns[3].trim(),
+                featuredImg: columns[0].replace(/"/g, '').trim(),
+                modTitle: columns[1].replace(/"/g, '').trim(),
+                modDesc: columns[2].replace(/"/g, '').trim(),
+                takeDownDate: columns[3].replace(/"/g, '').trim(),
                 takenDownFrom: takenDownFrom,
                 republishedOn: republishedOn,
-                isCreatorBanned: columns[8].trim(),
-                creatorName: columns[9].trim(),
-                creatorLink: columns[10].trim(),
-                isNSFW: columns[11].trim(),
-                gameName: columns[12].trim(),
-                gameLink: columns[13].trim()
+                isCreatorBanned: columns[8].replace(/"/g, '').trim(),
+                creatorName: columns[9].replace(/"/g, '').trim(),
+                creatorLink: columns[10].replace(/"/g, '').trim(),
+                isNSFW: columns[11].replace(/"/g, '').trim(),
+                gameName: columns[12].replace(/"/g, '').trim(),
+                gameLink: columns[13].replace(/"/g, '').trim()
             });
         }
     });
     renderItems(currentPage);
 }
+
 
 
     function renderItems(page) {
