@@ -1,56 +1,47 @@
 (function() {
     const bannedMods = document.getElementById('bannedMods');
     const secMainInside2GridBoxInsideAlt = bannedMods.querySelector('.secMainInside2GridBoxInsideAlt');
-    const paginationNumbers = bannedMods.querySelector('.paginationMainInsideNumbers'); // Select the existing pagination numbers
-    const prevButton = bannedMods.querySelector('.paginationMainInsideBtnArrowPrev'); // Select the Previous button
-    const nextButton = bannedMods.querySelector('.paginationMainInsideBtnArrowNext'); // Select the Next button
-
-    const items = [
-        {
-            featuredImg: "https://image.nostr.build/eb6c5f663e634a7e424e9cf4bbc5f9f41dd8cc7ac033f16ab04eb0786de0d65e.png",
-            modTitle: "My Personal Panam",
-            modDesc: "Short Mod Description 1",
-            takeDownDate: "2023-01-01",
-            takenDownFrom: [
-                { name: "Nexus Mods", link: "https://site1.com" },
-                { name: "GameBanana", link: "https://site2.com" },
-                { name: "GameBanana", link: "https://site2.com" },
-            ],
-            republishedOn: { name: "Repub Site 1", link: "https://repubsite1.com" },
-            isCreatorBanned: "no", 
-            creatorName: "CreatorName", 
-            creatorLink: "https://creatorlink.com", 
-            isNSFW: "yes",
-            gameName: "Game Name 1", // Added gameName
-            gameLink: "https://game-link1.com" // Added gameLink
-        },
-        {
-            featuredImg: "https://image.nostr.build/eb6c5f663e634a7e424e9cf4bbc5f9f41dd8cc7ac033f16ab04eb0786de0d65e.png",
-            modTitle: "My Perddsonal Panam",
-            modDesc: "Short Mod Description 1",
-            takeDownDate: "2023-01-01",
-            takenDownFrom: [
-                { name: "Nexus Mods", link: "https://site1.com" },
-                { name: "GameBanana", link: "https://site2.com" },
-                { name: "GameBanana", link: "https://site2.com" },
-            ],
-            republishedOn: { name: "Repub Site 1", link: "https://repubsite1.com" },
-            isCreatorBanned: "no", 
-            creatorName: "CreatorName", 
-            creatorLink: "https://creatorlink.com", 
-            isNSFW: "no",
-            gameName: "Game Name 2", // Added gameName
-            gameLink: "https://game-link2.com" // Added gameLink
-        },
-        
-        // Add more items as needed
-    ];
+    const paginationNumbers = bannedMods.querySelector('.paginationMainInsideNumbers');
+    const prevButton = bannedMods.querySelector('.paginationMainInsideBtnArrowPrev');
+    const nextButton = bannedMods.querySelector('.paginationMainInsideBtnArrowNext');
 
     const itemsPerPage = 8;
     let currentPage = 1;
+    let items = [];
+
+    // Function to fetch and parse CSV data
+    async function fetchItems() {
+        const response = await fetch('../db/bannedmods.csv'); // Update with the path to your CSV file
+        const text = await response.text();
+        const rows = text.split('\n').slice(1); // Skip header row
+
+        items = rows.map(row => {
+            const columns = row.split(',');
+            return {
+                featuredImg: columns[0],
+                modTitle: columns[1],
+                modDesc: columns[2],
+                takeDownDate: columns[3],
+                takenDownFrom: [
+                    { name: columns[4], link: columns[5] },
+                    { name: columns[6], link: columns[7] },
+                    { name: columns[8], link: columns[9] },
+                ],
+                republishedOn: { name: columns[10], link: columns[11] },
+                isCreatorBanned: columns[12],
+                creatorName: columns[13],
+                creatorLink: columns[14],
+                isNSFW: columns[15],
+                gameName: columns[16],
+                gameLink: columns[17]
+            };
+        });
+
+        renderItems(currentPage);
+    }
 
     function renderItems(page) {
-        secMainInside2GridBoxInsideAlt.innerHTML = ''; // Clear existing items
+        secMainInside2GridBoxInsideAlt.innerHTML = '';
         const start = (page - 1) * itemsPerPage;
         const end = start + itemsPerPage;
         const paginatedItems = items.slice(start, end);
@@ -70,7 +61,7 @@
                         <a class="sMI2GBIBFeaturedBottomCreator" href="${item.creatorLink}" target="_blank">
                             <span class="sMI2GBIBFeaturedBottomCreatorBanned">${item.isCreatorBanned === "yes" ? 'Banned' : 'Safe'}</span>
                             <div class="sMI2GBIBFeaturedBottomCreatorDivider"></div>
-                                                        <span class="sMI2GBIBFeaturedBottomCreatorName">${item.creatorName}</span>
+                            <span class="sMI2GBIBFeaturedBottomCreatorName">${item.creatorName}</span>
                         </a>
                     </div>
                 </div>
@@ -93,7 +84,7 @@
                         </div>
                     </div>
                     <div class="sMI2GBIBGame">
-                        <p class="sMI2GBIBGameText">Game</p>
+                                            <p class="sMI2GBIBGameText">Game</p>
                         <div class="sMI2GBIBGameGame">
                             <a class="sMI2GBIBGameGameLink" href="${item.gameLink}" target="_blank">
                                 <p class="sMI2GBIBGameGameLinkText">${item.gameName}<br /></p>
@@ -119,7 +110,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
             `;
             secMainInside2GridBoxInsideAlt.appendChild(itemElement);
         });
@@ -129,11 +119,10 @@
 
     function renderPagination() {
         const totalPages = Math.ceil(items.length / itemsPerPage);
-        paginationNumbers.innerHTML = ''; // Clear existing pagination buttons
+        paginationNumbers.innerHTML = '';
 
-        // Create pagination buttons
         for (let i = 1; i <= totalPages; i++) {
-                        const button = document.createElement('button');
+            const button = document.createElement('button');
             button.className = `btnMain paginationMainInsideBtn ${i === currentPage ? 'paginationMainInsideBtnActive' : ''}`;
             button.type = 'button';
             button.innerHTML = `<span>${i}</span>`;
@@ -144,14 +133,10 @@
             paginationNumbers.appendChild(button);
         }
 
-        // Enable/disable Previous button
         prevButton.disabled = currentPage === 1;
-
-        // Enable/disable Next button
         nextButton.disabled = currentPage === totalPages;
     }
 
-    // Event listeners for Previous and Next buttons
     prevButton.addEventListener('click', () => {
         if (currentPage > 1) {
             currentPage--;
@@ -167,6 +152,8 @@
         }
     });
 
-    // Initial render
-    renderItems(currentPage);
+    // Fetch items from CSV and render them
+    fetchItems();
 })();
+
+                       
