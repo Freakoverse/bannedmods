@@ -5,50 +5,44 @@
     const prevButton = bannedMods.querySelector('.paginationMainInsideBtnArrowPrev');
     const nextButton = bannedMods.querySelector('.paginationMainInsideBtnArrowNext');
 
+    let items = []; // Initialize items as an empty array
     const itemsPerPage = 8;
     let currentPage = 1;
-    let items = [];
 
     // Function to fetch and parse CSV data
-    async function fetchItems() {
-        const response = await fetch('/db/bannedmods.csv'); // Update with the path to your CSV file
+    async function fetchCSVData() {
+        const response = await fetch('data.csv'); // Adjust the path as necessary
         const text = await response.text();
-        const rows = text.split('\n').slice(1); // Skip header row
+        parseCSV(text);
+    }
 
+    // Function to parse CSV text into items array
+    function parseCSV(text) {
+        const rows = text.split('\n').slice(1); // Skip header row
         items = rows.map(row => {
             const columns = row.split(',');
-
-            // Parse takenDownFrom and takenDownFromLink
-            const takenDownFrom = columns[4].replace(/"/g, '').split(',').map(name => name.trim());
-            const takenDownFromLink = columns[5].replace(/"/g, '').split(',').map(link => link.trim());
-
-            // Parse republishedOnName and republishedOnLink
-            const republishedOnNames = columns[6].replace(/"/g, '').split(',').map(name => name.trim());
-            const republishedOnLinks = columns[7].replace(/"/g, '').split(',').map(link => link.trim());
-
             return {
-                featuredImg: columns[0].trim(),
-                modTitle: columns[1].trim(),
-                modDesc: columns[2].trim(),
-                takeDownDate: columns[3].trim(),
-                takenDownFrom: takenDownFrom.map((name, index) => ({
-                    name: name,
-                    link: takenDownFromLink[index] ? takenDownFromLink[index].trim() : '' // Ensure link is trimmed
+                featuredImg: columns[0],
+                modTitle: columns[1],
+                modDesc: columns[2],
+                takeDownDate: columns[3],
+                takenDownFrom: columns[4].split(';').map((name, index) => ({
+                    name: name.trim(),
+                    link: columns[5].split(';')[index].trim()
                 })),
-                republishedOn: republishedOnNames.map((name, index) => ({
-                    name: name,
-                    link: republishedOnLinks[index] ? republishedOnLinks[index].trim() : '' // Ensure link is trimmed
-                })),
+                republishedOn: {
+                    name: columns[6].trim(),
+                    link: columns[7].trim()
+                },
                 isCreatorBanned: columns[8].trim(),
                 creatorName: columns[9].trim(),
-                creatorLink: columns[10].trim(), // Ensure this is correctly formatted in the CSV
+                creatorLink: columns[10].trim(),
                 isNSFW: columns[11].trim(),
                 gameName: columns[12].trim(),
-                gameLink: columns[13].trim() // Ensure this is correctly formatted in the CSV
+                gameLink: columns[13].trim()
             };
         });
-
-        renderItems(currentPage);
+        renderItems(currentPage); // Render items after fetching
     }
 
     function renderItems(page) {
@@ -73,7 +67,7 @@
                             <span class="sMI2GBIBFeaturedBottomCreatorBanned">${item.isCreatorBanned === "yes" ? 'Banned' : 'Safe'}</span>
                             <div class="sMI2GBIBFeaturedBottomCreatorDivider"></div>
                             <span class="sMI2GBIBFeaturedBottomCreatorName">${item.creatorName}</span>
-                        </a>
+                                                    </a>
                     </div>
                 </div>
                 <div class="sMI2GBIBDetails">
@@ -94,16 +88,6 @@
                             `).join('')}
                         </div>
                     </div>
-                    <div class="sMI2GBIBRepub">
-                        <p class="sMI2GBIBRepubText">Republished on</p>
-                        <div class="sMI2GBIBRepubSites">
-                            ${item.republishedOn.map(repub => `
-                                <a class="sMI2GBIBRepubSite" href="${repub.link}" target="_blank">
-                                    <p class="sMI2GBIBRepubSiteText">${repub.name}<br /></p>
-                                </a>
-                            `).join('')}
-                        </div>
-                    </div>
                     <div class="sMI2GBIBGame">
                         <p class="sMI2GBIBGameText">Game</p>
                         <div class="sMI2GBIBGameGame">
@@ -115,7 +99,23 @@
                     <div class="sMI2GBIBActions">
                         <button class="btnMain sMI2GBIBActionsButton" type="button">Find</button>
                     </div>
+                    <div class="sMI2GBIBRepub">
+                        <div class="sMI2GBIBRepubTop">
+                            <button class="btnMain sMI2GBIBRepubTopBtn" type="button">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-96 0 512 512" width="1em" height="1em" fill="currentColor">
+                                    <path d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="sMI2GBIBRepubMidDivider"></div>
+                        <div class="sMI2GBIBRepubMid">
+                            <a class="btnMain sMI2GBIBRepubMidBtn" role="button" href="${item.republishedOn.link}" target="_blank">
+                                <span class="sMI2GBIBRepubMidBtnSpan">${item.republishedOn.name}</span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
+            </div>
             `;
             secMainInside2GridBoxInsideAlt.appendChild(itemElement);
         });
@@ -131,6 +131,7 @@
             const button = document.createElement('button');
             button.className = `btnMain paginationMainInsideBtn ${i === currentPage ? 'paginationMainInsideBtnActive' : ''}`;
             button.type = 'button';
+            button.type = 'button';
             button.innerHTML = `<span>${i}</span>`;
             button.addEventListener('click', () => {
                 currentPage = i;
@@ -139,10 +140,15 @@
             paginationNumbers.appendChild(button);
         }
 
+        // Enable/disable Previous button
         prevButton.disabled = currentPage === 1;
+
+        // Enable/disable Next button
+        const totalPages = Math.ceil(items.length / itemsPerPage);
         nextButton.disabled = currentPage === totalPages;
     }
 
+    // Event listeners for Previous and Next buttons
     prevButton.addEventListener('click', () => {
         if (currentPage > 1) {
             currentPage--;
@@ -158,6 +164,6 @@
         }
     });
 
-    // Fetch items from CSV and render them
-    fetchItems();
+    // Initial fetch and render
+    fetchCSVData();
 })();
