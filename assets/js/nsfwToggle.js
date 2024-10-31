@@ -5,13 +5,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const elementsToToggle = document.querySelectorAll('.secMainInside2GridBoxInsideBox');
         
         elementsToToggle.forEach(function(element) {
-                if (element.querySelector('.sMI2GBIBFeaturedTopNSFWShow')) {
-                    element.style.filter = 'unset'; // Show the element
-                    element.style.opacity = '1'; // Fully visible
-                } else {
-                    element.style.filter = 'unset'; // Keep other elements visible
-                    element.style.opacity = '1'; // Fully visible
-                }
+            if (checkbox.checked) { // Check if the checkbox is checked
+                // Show all elements
+                element.style.filter = 'unset'; // Show the element
+                element.style.opacity = '1'; // Fully visible
             } else {
                 // Hide only elements with the class sMI2GBIBFeaturedTopNSFWShow
                 if (element.querySelector('.sMI2GBIBFeaturedTopNSFWShow')) {
