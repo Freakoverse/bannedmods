@@ -9,15 +9,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Show the element if it has the class sMI2GBIBFeaturedTopNSFWShow
                 if (element.querySelector('.sMI2GBIBFeaturedTopNSFWShow')) {
                     element.style.filter = 'unset'; // Show the element
+                    element.style.opacity = '0.25;'
                 } else {
                     element.style.filter = 'unset'; // Keep other elements visible
+                    element.style.opacity = '0.25;'
                 }
             } else {
                 // Hide only elements with the class sMI2GBIBFeaturedTopNSFWShow
                 if (element.querySelector('.sMI2GBIBFeaturedTopNSFWShow')) {
                     element.style.filter = 'blur(10px)'; // Hide the element
+                    element.style.opacity = '0.25;'
                 } else {
                     element.style.filter = 'unset'; // Keep other elements visible
+                    element.style.opacity = '1;'
                 }
             }
         });
